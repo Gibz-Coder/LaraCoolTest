@@ -10,4 +10,17 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: undefined,
+            },
+        },
+        chunkSizeWarningLimit: 1000,
+    },
+    resolve: {
+        alias: {
+            '~bootstrap': 'bootstrap',
+        },
+    },
 });
