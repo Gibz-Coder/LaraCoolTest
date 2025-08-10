@@ -27,11 +27,22 @@
     <!-- About Section -->
     @include('components.about', ['stats' => $stats ?? []])
     
+    <!-- Testimonials Section -->
+    @include('components.testimonials', ['testimonials' => $testimonials ?? []])
+    
     <!-- Contact Section -->
     @include('components.contact')
     
+    <!-- Newsletter Section -->
+    @include('components.newsletter')
+    
     <!-- Footer -->
     @include('components.footer')
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 @endsection
 
 @push('styles')
@@ -236,6 +247,53 @@ select:focus {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
 }
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    background: var(--secondary-color);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.back-to-top:active {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+}
 </style>
 @endpush
 
@@ -314,6 +372,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 bsCollapse.hide();
             }
         }
+    });
+    
+    // Back to Top Button
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (backToTopBtn) {
+        // Show/hide button based on scroll position
+        function toggleBackToTop() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }
+        
+        window.addEventListener('scroll', toggleBackToTop);
+        toggleBackToTop(); // Initialize
+        
+        // Smooth scroll to top when clicked
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
     
     // Performance monitoring (optional)

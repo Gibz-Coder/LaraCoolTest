@@ -121,11 +121,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Back to Top Button -->
-    <div class="back-to-top" id="backToTop">
-        <i class="fas fa-chevron-up"></i>
-    </div>
 </footer>
 
 @push('styles')
@@ -338,41 +333,7 @@
     color: white;
 }
 
-/* Back to Top Button */
-.back-to-top {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 1000;
-    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
-}
 
-.back-to-top.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.back-to-top:hover {
-    background: var(--secondary-color);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
-}
-
-.back-to-top i {
-    font-size: 1.25rem;
-}
 
 /* Responsive Design */
 @media (max-width: 991.98px) {
@@ -407,17 +368,6 @@
         margin: 0 0.75rem;
         display: inline-block;
         margin-bottom: 0.5rem;
-    }
-    
-    .back-to-top {
-        bottom: 1rem;
-        right: 1rem;
-        width: 45px;
-        height: 45px;
-    }
-    
-    .back-to-top i {
-        font-size: 1.1rem;
     }
 }
 </style>

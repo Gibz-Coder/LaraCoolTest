@@ -60,6 +60,26 @@ class LandingController extends Controller
                     'number' => '24/7',
                     'label' => 'Support'
                 ]
+            ],
+            'testimonials' => [
+                [
+                    'name' => 'Sarah Johnson',
+                    'position' => 'Web Developer',
+                    'text' => 'This platform has completely transformed how I approach web development. The clean design and powerful features make it a joy to work with.',
+                    'rating' => 5
+                ],
+                [
+                    'name' => 'Michael Chen',
+                    'position' => 'Startup Founder',
+                    'text' => 'Incredible performance and reliability. Our team productivity has increased significantly since we started using this solution.',
+                    'rating' => 5
+                ],
+                [
+                    'name' => 'Emily Rodriguez',
+                    'position' => 'UI/UX Designer',
+                    'text' => 'The attention to detail and user experience is outstanding. It\'s exactly what we needed for our projects.',
+                    'rating' => 5
+                ]
             ]
         ];
 
@@ -77,20 +97,41 @@ class LandingController extends Controller
         // Get validated data from the form request
         $validated = $request->validated();
 
-        // Here you would typically save to database or send email
-        // For demonstration, we'll just log the contact attempt
-        \Log::info('Contact form submission', [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'subject' => $validated['subject'] ?? 'No subject',
-            'message' => substr($validated['message'], 0, 100) . '...',
-            'timestamp' => now(),
-            'ip_address' => $request->ip()
-        ]);
+        try {
+            // Save contact to database
+            $contact = \App\Models\Contact::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'subject' => $validated['subject'] ?? 'General Inquiry',
+                'message' => $validated['message'],
+                'ip_address' => $request->ip(),
+            ]);
 
-        // Flash success message with personalized greeting
-        $successMessage = "Thank you, {$validated['name']}! Your message has been received and we'll get back to you soon.";
-        
-        return redirect()->back()->with('success', $successMessage);
+            // Log the contact submission for monitoring
+            \Log::info('Contact form submission saved', [
+                'contact_id' => $contact->id,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'timestamp' => now(),
+            ]);
+
+            // Flash success message with personalized greeting
+            $successMessage = "Thank you, {$validated['name']}! Your message has been received and we'll get back to you soon.";
+            
+            return redirect()->back()->with('success', $successMessage);
+
+        } catch (\Exception $e) {
+            // Log the error
+            \Log::error('Contact form submission failed', [
+                'error' => $e->getMessage(),
+                'data' => $validated,
+                'timestamp' => now(),
+            ]);
+
+            // Return with error message
+            return redirect()->back()
+                ->with('error', 'Sorry, there was an issue sending your message. Please try again.')
+                ->withInput();
+        }
     }
 }
